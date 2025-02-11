@@ -6,20 +6,6 @@
     "configurations": [
         {
             "type": "java",
-            "name": "NumberOfWaysToArriveAtDestination",
-            "request": "launch",
-            "mainClass": "graph.NumberOfWaysToArriveAtDestination",
-            "projectName": "Leetcode_9c488529"
-        },
-        {
-            "type": "java",
-            "name": "MinimumLengthofStringAfterOperation",
-            "request": "launch",
-            "mainClass": "hash.MinimumLengthofStringAfterOperation",
-            "projectName": "Leetcode_9c488529"
-        },
-        {
-            "type": "java",
             "name": "SnakesAndLadders",
             "request": "launch",
             "mainClass": "graph.SnakesAndLadders",
