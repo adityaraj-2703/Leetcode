@@ -1,65 +1,67 @@
 package segment;
 
 public class SegmentTree {
-    int[][] segmentTree;
-    int n;
+    int[] seg;
+    int length;
+
     public SegmentTree(int[] nums) {
-        segmentTree = new int[4*nums.length][3];
-        this.n = nums.length;
-        buildSegmentTree(0,nums,0,nums.length-1);
-    }
-    public void buildSegmentTree(int i,int[] nums,int l,int r){
-        if(l==r){
-            segmentTree[i][0] = l;
-            segmentTree[i][1] = r;
-            segmentTree[i][2] = nums[l];
-            return;
-        }
-        int m = l + (r-l)/2;
-        buildSegmentTree(2*i+1,nums,l,m);
-        buildSegmentTree(2*i+2,nums,m+1,r);
-        segmentTree[i][0] = l;
-        segmentTree[i][1] = r;
-        segmentTree[i][2] = segmentTree[2*i+1][2] + segmentTree[2*i+2][2];
-        
-    }
-    public int[][] getSegmentTree(){
-        return this.segmentTree;
-    }
-    
-    public void update(int index, int val) {
-        updateHelper(1, 0, n - 1, index, val);
+        seg = new int[nums.length * 4];
+        length = nums.length;
+        buildSegmentTree(nums, 0, 0, nums.length - 1);
     }
 
-    private void updateHelper(int pos, int start, int end, int idx, int val){
-        if(start == end){
-            segmentTree[pos][2] = val;
+    public void buildSegmentTree(int[] nums, int ind, int low, int high) {
+        if (low == high) {
+            seg[ind] = nums[low];
             return;
         }
-        
-        int mid = start + (end - start) / 2;
-        if(idx <= mid)
-            updateHelper(2 * pos, start, mid, idx, val);
-        else 
-            updateHelper(2 * pos + 1, mid + 1, end, idx, val);
-        segmentTree[pos][2] = segmentTree[2 * pos][2] + segmentTree[2 * pos + 1][2]; 
+        int m = (low + high) / 2;
+        buildSegmentTree(nums, 2 * ind + 1, low, m);
+        buildSegmentTree(nums, 2 * ind + 2, m + 1, high);
+        seg[ind] = seg[2 * ind + 1] + seg[2 * ind + 2];
     }
-    
-    public int sumRange(int left, int right) {
-        
-        return sumRangeUtil(0,0,n-1,left,right);
-        
-    }
-    public int sumRangeUtil(int pos,int l,int r,int ql,int qr){
-        if(l >= ql && r <= qr)
-            return segmentTree[pos][2];
-        
-        if(r < ql || l > qr)
+
+    public int sumRange(int left, int right, int ind, int low, int high) {
+        if (left > high || right < low) {
             return 0;
-        
-        int m = l + (r-l)/2;
-        int left = sumRangeUtil(2*pos+1,l,m,ql,qr);
-        int right = sumRangeUtil(2*pos+2,m+1,r,ql,qr);
-        return left + right;
+        }
+        if (low >= left && high <= right) {
+            return seg[ind];
+        }
+        int mid = (low + high) / 2;
+        int l = sumRange(left, right, 2 * ind + 1, low, mid);
+        int r = sumRange(left, right, 2 * ind + 1, low, mid);
+        return l + r;
     }
+
+    public void update(int index, int ind, int val, int low, int high) {
+        if (low == high) {
+            seg[ind] = val;
+            return;
+        }
+        int mid = (low + high) / 2;
+        if (index <= mid) {
+            update(index, 2 * ind + 1, val, low, mid);
+        } else {
+            update(index, 2 * ind + 2, val, mid + 1, high);
+        }
+        seg[ind] = seg[2 * ind + 1] + seg[2 * ind + 2];
+    }
+
+    public void update(int index, int val) {
+        update(index, 0, val, 0, length - 1);
+    }
+
+    public int sumRange(int left, int right) {
+        return sumRange(left, right, 0, 0, length - 1);
+    }
+
+    public static void main(String[] args) {
+        int[] nums = { 1, 3, 5 };
+        SegmentTree s = new SegmentTree(nums);
+        System.out.println(s.sumRange(0, 2));
+        s.update(1, 2);
+        System.out.println(s.sumRange(0, 2));
+    }
+
 }

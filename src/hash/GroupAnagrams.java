@@ -1,44 +1,57 @@
 package hash;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GroupAnagrams {
-     public List<List<String>> groupAnagrams(String[] strs) {
-        boolean[] f = new boolean[strs.length];
-       
+    public List<List<String>> groupAnagrams(String[] strs) {
         List<List<String>> ans = new ArrayList<>();
-        for(int i=0;i<strs.length;i++){
-            if(f[i]==true){
+        boolean[] visit = new boolean[strs.length];
+        Map<String, int[]> hm = new HashMap<>();
+        for (int i = 0; i < strs.length; i++) {
+            if (visit[i]) {
                 continue;
             }
-            List<String> ans1 = new ArrayList<>();
-            ans1.add(strs[i]);
-            int[] temp = new int[26];
-            for(int c=0;c<strs[i].length();c++){
-                temp[strs[i].charAt(c) - 97]++;
+            List<String> temp = new ArrayList<>();
+            temp.add(strs[i]);
+            int[] map1 = new int[26];
+            for (int j = 0; j < strs[i].length(); j++) {
+                map1[strs[i].charAt(j) - 'a']++;
             }
-            
-            for(int j=i+1;j<strs.length;j++){
-                int[] temp1 = new int[26];
-                for(int d=0;d<strs[j].length();d++){
-                    temp1[strs[j].charAt(d) - 97]++;
+            visit[i] = true;
+            for (int j = i + 1; j < strs.length; j++) {
+                if (visit[j]) {
+                    continue;
                 }
-                boolean flag = true;
-                for(int z=0;z<temp.length;z++){
-                    if(temp[z]!=temp1[z]){
-                        flag = false;
-                        break;
-                    }
+                int[] map2 = new int[26];
+                for (int k = 0; k < strs[j].length(); k++) {
+                    map2[strs[j].charAt(k) - 'a']++;
                 }
-                if(flag){
-                    ans1.add(strs[j]);
-                    f[j] = true;
+                if (check(map1, map2)) {
+                    visit[j] = true;
+                    temp.add(strs[j]);
                 }
             }
-            ans.add(ans1);
-            
+            ans.add(temp);
+
         }
         return ans;
+    }
+
+    public boolean check(int[] a, int[] b) {
+        for (int i = 0; i < 26; i++) {
+            if (a[i] != b[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        GroupAnagrams g = new GroupAnagrams();
+        String[] strs = { "eat", "tea", "tan", "ate", "nat", "bat" };
+        System.out.println(g.groupAnagrams(strs));
     }
 }
