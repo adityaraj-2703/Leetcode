@@ -8,12 +8,12 @@ public class NumberOfWaysToArriveAtDestination {
 
     public int countPaths(int n, int[][] roads) {
         List<List<Pair>> adjList = new ArrayList<>();
-        for (int i = 0; i < n; i++) {
-            adjList.add(new ArrayList<>());
+        int[] dist = new int[n];
+        for (int i = 0; i < dist.length; i++) {
+            dist[i] = Integer.MAX_VALUE;
         }
-        for (int i = 0; i < roads.length; i++) {
-            adjList.get(roads[i][0]).add(new Pair(roads[i][1], roads[i][2]));
-            adjList.get(roads[i][1]).add(new Pair(roads[i][0], roads[i][2]));
+        boolean[] visited = new boolean[n];
+        dist[0] = 0;
 
         }
         int[] dist = new int[n];
@@ -27,27 +27,30 @@ public class NumberOfWaysToArriveAtDestination {
         int count = 0;
         while (!pq.isEmpty()) {
             Pair temp = pq.poll();
-            if (temp.ind == n - 1) {
-                if (min > temp.val) {
+            if (temp.vertex == n - 1) {
+                if (temp.val < min) {
                     min = temp.val;
                     count = 1;
-                } else if (min == temp.val) {
+                } else if (temp.val == min) {
                     count++;
                 }
-                continue;
             }
-            for (Pair p : adjList.get(temp.ind)) {
-                if (dist[p.ind] >= temp.val + p.val) {
-                    pq.add(new Pair(p.ind, temp.val + p.val));
-                    dist[p.ind] = temp.val + p.val;
+            visited[temp.vertex] = true;
+            for (Pair i : adjList.get(temp.vertex)) {
+
+                if (!visited[i.vertex]) {
+                    dist[i.vertex] = Math.min(dist[i.vertex], dist[temp.vertex] + i.val);
+                    if (dist[i.vertex] == dist[temp.vertex] + i.val) {
+
+                        pq.add(new Pair(i.vertex, temp.val + i.val));
+                    }
+
                 }
+
             }
-
         }
-        return count;
-    }
+        System.out.println(min);
 
-    class Pair {
         int ind;
         int val;
 
@@ -63,4 +66,5 @@ public class NumberOfWaysToArriveAtDestination {
                 { 2, 5, 1 }, { 0, 4, 5 }, { 4, 6, 2 } };
         System.out.println(n.countPaths(7, roads));
     }
+
 }
