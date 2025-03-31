@@ -33,7 +33,6 @@ import heap.SortIntegersByPowerValue;
 
 import java.util.stream.Collectors;
 import linkedelist.HappyNumber;
-import linkedelist.ListNode;
 import linkedelist.MergeKSortedList;
 import math.*;
 import matrix.MatrixMaximumSum;
@@ -48,7 +47,6 @@ import string.ReverseWordsInaString;
 import string.SumOfDigits;
 import tree.BTree;
 import tree.GTreeNode;
-import tree.LinkedListInBinaryTree;
 import tree.PointerToNext;
 import tree.SmallestCommonRegion;
 import trie.FindMaximumXor;
